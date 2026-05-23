@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.LoginController" style="-fx-background-color: linear-gradient(to bottom right, #1a2980, #26d0ce);" alignment="CENTER">
+    
+    <GridPane alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0.5, 0, 10);" hgap="15" vgap="15" maxWidth="380">
+        <padding>
+            <Insets top="50" right="50" bottom="50" left="50"/>
+        </padding>
+        
+        <Label text="Bus Reservation System" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1a2980;" GridPane.columnSpan="2" GridPane.halignment="CENTER"/>
+        
+        <!-- REMOVED the "Welcome Back!" line that was overlapping -->
+        
+        <Label text="" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+        
+        <Label text="Username" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+        <TextField fx:id="usernameField" promptText="Enter your username" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="220" style="-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+        
+        <Label text="Password" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+        <PasswordField fx:id="passwordField" promptText="Enter your password" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="220" style="-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+        
+        <HBox spacing="15" GridPane.rowIndex="4" GridPane.columnSpan="2" alignment="CENTER">
+            <Button text="Login" onAction="#handleLogin" style="-fx-background-color: linear-gradient(to right, #1a2980, #26d0ce); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 35 10 35; -fx-background-radius: 25; -fx-cursor: hand;"/>
+            <Button text="Clear" onAction="#handleClear" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 35 10 35; -fx-background-radius: 25; -fx-cursor: hand;"/>
+        </HBox>
+        
+        <HBox spacing="5" GridPane.rowIndex="5" GridPane.columnSpan="2" alignment="CENTER">
+            <Label text="Don't have an account?" style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+            <Button text="Sign Up" onAction="#handleSignUp" style="-fx-background-color: transparent; -fx-text-fill: #3498db; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: hand; -fx-underline: true; -fx-padding: 0;"/>
+        </HBox>
+    </GridPane>
+</VBox>

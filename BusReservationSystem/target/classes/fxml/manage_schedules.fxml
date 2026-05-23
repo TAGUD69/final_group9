@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.ManageSchedulesController" spacing="15">
+    
+    <Label text="Manage Schedules" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <GridPane hgap="15" vgap="15">
+        <Label text="Bus:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="busCombo" promptText="Select Bus" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        
+        <Label text="Route:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="routeCombo" promptText="Select Route" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <Label text="Departure Date:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <DatePicker fx:id="departureDate" prefWidth="180" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        
+        <Label text="Departure Time:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="departureHour" prefWidth="80" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text=":" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="departureMinute" prefWidth="80" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+        
+        <Label text="Arrival Date:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <DatePicker fx:id="arrivalDate" prefWidth="180" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        
+        <Label text="Arrival Time:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="arrivalHour" prefWidth="80" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label text=":" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="arrivalMinute" prefWidth="80" GridPane.rowIndex="5" GridPane.columnIndex="3"/>
+        
+        <Label text="Available Seats:" GridPane.rowIndex="6" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="seatsField" promptText="40" prefWidth="300" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        
+        <Label text="Fare Multiplier:" GridPane.rowIndex="7" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="multiplierField" text="1.0" prefWidth="300" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <HBox spacing="15">
+        <Button text="➕ Add Schedule" onAction="#handleAdd" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+        <Button text="🗑 Delete Schedule" onAction="#handleDelete" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+        <Button text="🔄 Clear" onAction="#handleClear" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+    </HBox>
+    
+    <TableView fx:id="schedulesTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" fx:id="colId" prefWidth="50"/>
+            <TableColumn text="Bus" fx:id="colBus" prefWidth="180"/>
+            <TableColumn text="Route" fx:id="colRoute" prefWidth="250"/>
+            <TableColumn text="Departure" fx:id="colDeparture" prefWidth="150"/>
+            <TableColumn text="Arrival" fx:id="colArrival" prefWidth="150"/>
+            <TableColumn text="Available Seats" fx:id="colSeats" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

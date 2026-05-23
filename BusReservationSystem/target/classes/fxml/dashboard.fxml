@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.DashboardController" style="-fx-background-color: #f5f6fa;">
+    
+    <top>
+        <VBox>
+            <HBox style="-fx-background-color: linear-gradient(to right, #1a2980, #26d0ce); -fx-padding: 15 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 2);" spacing="20" alignment="CENTER_LEFT">
+                <Label text="🚌 Bus Reservation System" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label text="Davao del Sur" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="userLabel" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+                <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-background-radius: 20; -fx-cursor: hand; -fx-padding: 5 15 5 15;"/>
+            </HBox>
+            
+            <HBox style="-fx-background-color: white; -fx-padding: 10 20; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;" spacing="10" alignment="CENTER_LEFT">
+                <Button text="🚌 Find Trip" onAction="#showSearch" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 8 15 8 15; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Button text="📋 My Bookings" onAction="#showBookings" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 8 15 8 15; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Button fx:id="reportsButton" text="📊 Reports" onAction="#showReports" visible="false" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 8 15 8 15; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Separator orientation="VERTICAL" style="-fx-background-color: #e0e0e0;" prefHeight="30"/>
+                <MenuButton fx:id="adminMenu" visible="false" text="⚙ Admin" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 5 15 5 15;">
+                    <items>
+                        <MenuItem text="Manage Buses" onAction="#showManageBuses"/>
+                        <MenuItem text="Manage Routes" onAction="#showManageRoutes"/>
+                        <MenuItem text="Manage Schedules" onAction="#showManageSchedules"/>
+                        <MenuItem text="Manage Users" onAction="#showManageUsers"/>
+                    </items>
+                </MenuButton>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-padding: 20; -fx-background-color: white;"/>
+    </center>
+</BorderPane>

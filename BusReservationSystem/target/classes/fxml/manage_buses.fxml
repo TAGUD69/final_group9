@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.ManageBusesController" spacing="15">
+    
+    <Label text="Manage Buses" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <HBox spacing="10">
+        <TextField fx:id="busNumberField" promptText="Bus Number" prefWidth="120"/>
+        <TextField fx:id="busNameField" promptText="Bus Name" prefWidth="150"/>
+        <TextField fx:id="capacityField" promptText="Capacity" prefWidth="80"/>
+        <ComboBox fx:id="busTypeCombo" promptText="Type" prefWidth="100"/>
+        <Button text="Add" onAction="#handleAdd" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+        <Button text="Update" onAction="#handleUpdate" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+        <Button text="Delete" onAction="#handleDelete" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        <Button text="Clear" onAction="#handleClear"/>
+    </HBox>
+    
+    <TableView fx:id="busesTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" fx:id="colId" prefWidth="50"/>
+            <TableColumn text="Bus Number" fx:id="colBusNumber" prefWidth="120"/>
+            <TableColumn text="Bus Name" fx:id="colBusName" prefWidth="200"/>
+            <TableColumn text="Capacity" fx:id="colCapacity" prefWidth="80"/>
+            <TableColumn text="Type" fx:id="colType" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

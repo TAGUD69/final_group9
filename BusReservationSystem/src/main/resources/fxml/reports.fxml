@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.ReportsController" spacing="15">
+    
+    <Label text="Reports and Analytics" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <TabPane VBox.vgrow="ALWAYS">
+        <Tab text="Daily Booking Summary">
+            <TableView fx:id="summaryTable">
+                <columns>
+                    <TableColumn text="Date" fx:id="colDate" prefWidth="200"/>
+                    <TableColumn text="Bookings" fx:id="colTotalBookings" prefWidth="150"/>
+                    <TableColumn text="Revenue" fx:id="colRevenue" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </Tab>
+        <Tab text="Popular Routes">
+            <TableView fx:id="routesTable">
+                <columns>
+                    <TableColumn text="Origin" fx:id="colOrigin" prefWidth="150"/>
+                    <TableColumn text="Destination" fx:id="colDestination" prefWidth="150"/>
+                    <TableColumn text="Bookings" fx:id="colBookings" prefWidth="100"/>
+                    <TableColumn text="Revenue" fx:id="colRouteRevenue" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </Tab>
+    </TabPane>
+</VBox>
