@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.busreservation.controllers.MyBookingsController"
+      spacing="15" style="-fx-background-color: white; -fx-padding: 20;">
+
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="📋 My Bookings"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Showing confirmed bookings only"
+               style="-fx-font-size: 12px; -fx-text-fill: #95a5a6;"/>
+    </HBox>
+
+    <TableView fx:id="bookingsTable" VBox.vgrow="ALWAYS"
+               style="-fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-background-radius: 8;">
+        <placeholder>
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 40;">
+                <Label text="📭" style="-fx-font-size: 48px;"/>
+                <Label text="No active bookings" style="-fx-font-size: 16px; -fx-text-fill: #7f8c8d;"/>
+                <Label text="Go to Find Trip to book your first ride!"
+                       style="-fx-font-size: 12px; -fx-text-fill: #95a5a6;"/>
+            </VBox>
+        </placeholder>
+        <columns>
+            <TableColumn text="ID"        fx:id="colBookingId" prefWidth="55"/>
+            <TableColumn text="Booked On" fx:id="colDate"      prefWidth="150"/>
+            <TableColumn text="Bus"       fx:id="colBus"       prefWidth="150"/>
+            <TableColumn text="Route"     fx:id="colRoute"     prefWidth="200"/>
+            <TableColumn text="Passenger" fx:id="colPassenger" prefWidth="130"/>
+            <TableColumn text="Seats"     fx:id="colSeats"     prefWidth="90"/>
+            <TableColumn text="Total Fare" fx:id="colFare"     prefWidth="90"/>
+            <TableColumn text="Status"    fx:id="colStatus"    prefWidth="85"/>
+            <TableColumn text=""          fx:id="colAction"    prefWidth="85"/>
+        </columns>
+    </TableView>
+</VBox>

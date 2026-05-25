@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.ReportsController" spacing="15" style="-fx-padding: 20; -fx-background-color: white;">
+    
+    <Label text="All Bookings Report" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <TableView fx:id="bookingsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="Booking ID" fx:id="colBookingId" prefWidth="80"/>
+            <TableColumn text="Date" fx:id="colDate" prefWidth="120"/>
+            <TableColumn text="Time" fx:id="colTime" prefWidth="100"/>
+            <TableColumn text="Passenger" fx:id="colPassenger" prefWidth="150"/>
+            <TableColumn text="Route" fx:id="colRoute" prefWidth="200"/>
+            <TableColumn text="Seats" fx:id="colSeats" prefWidth="80"/>
+            <TableColumn text="Fare" fx:id="colFare" prefWidth="100"/>
+            <TableColumn text="Status" fx:id="colStatus" prefWidth="100"/>
+        </columns>
+    </TableView>
+    
+    <HBox spacing="10">
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Total Bookings: " style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+        <Label fx:id="totalLabel" text="0" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+        <Label text="Total Revenue: " style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 0 0 20;"/>
+        <Label fx:id="revenueLabel" text="₱0" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+        <Button text="🔄 Refresh" onAction="#refreshReport" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+    </HBox>
+</VBox>

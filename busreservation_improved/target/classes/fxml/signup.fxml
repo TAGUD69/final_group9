@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.busreservation.controllers.SignUpController"
+      alignment="CENTER" style="-fx-background-color: white;" prefWidth="420">
+    <padding><Insets top="35" right="40" bottom="35" left="40"/></padding>
+
+    <Label text="🚌 Create Account"
+           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1a2980;"/>
+    <Label text="Bus Reservation System — Davao del Sur"
+           style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d; -fx-padding: 0 0 15 0;"/>
+    <Separator style="-fx-padding: 0 0 15 0;"/>
+
+    <GridPane hgap="15" vgap="12" alignment="CENTER">
+        <Label text="Full Name *"  GridPane.rowIndex="0" GridPane.columnIndex="0"
+               style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+        <TextField fx:id="fullNameField" promptText="Enter your full name"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="240"
+                   style="-fx-padding: 9; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+
+        <Label text="Username *"   GridPane.rowIndex="1" GridPane.columnIndex="0"
+               style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+        <TextField fx:id="usernameField" promptText="Choose a username"
+                   GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="240"
+                   style="-fx-padding: 9; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+
+        <Label text="Password *"   GridPane.rowIndex="2" GridPane.columnIndex="0"
+               style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+        <PasswordField fx:id="passwordField" promptText="Min. 4 characters"
+                       GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="240"
+                       style="-fx-padding: 9; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+
+        <Label text="Confirm *"    GridPane.rowIndex="3" GridPane.columnIndex="0"
+               style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Re-enter password"
+                       GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="240"
+                       style="-fx-padding: 9; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+    </GridPane>
+
+    <HBox spacing="12" alignment="CENTER" style="-fx-padding: 18 0 0 0;">
+        <Button text="Create Account" onAction="#handleSignUp"
+                style="-fx-background-color: linear-gradient(to right, #1a2980, #26d0ce);
+                       -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;
+                       -fx-padding: 10 30; -fx-background-radius: 25; -fx-cursor: hand;"/>
+        <Button text="Cancel" onAction="#handleCancel"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 13px;
+                       -fx-padding: 10 30; -fx-background-radius: 25; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

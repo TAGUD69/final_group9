@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.busreservation.controllers.SearchController"
+      spacing="15" style="-fx-padding: 20; -fx-background-color: white;">
+
+    <HBox fx:id="statsCardsContainer" spacing="15" alignment="CENTER" visible="false" managed="false">
+        <VBox alignment="CENTER" style="-fx-background-color: #3498db; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+            <Label fx:id="todayBookingsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Today's Bookings" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        </VBox>
+        <VBox alignment="CENTER" style="-fx-background-color: #27ae60; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+            <Label fx:id="todayRevenueLabel" text="₱0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Today's Revenue" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        </VBox>
+        <VBox alignment="CENTER" style="-fx-background-color: #e67e22; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+            <Label fx:id="activeSchedulesLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Active Schedules" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        </VBox>
+        <VBox alignment="CENTER" style="-fx-background-color: #9b59b6; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
+            <Label fx:id="totalUsersLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="Total Users" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
+        </VBox>
+    </HBox>
+
+    <HBox alignment="CENTER_LEFT" spacing="15"
+          style="-fx-background-color: linear-gradient(to right, #eaf4fc, white);
+                 -fx-padding: 15; -fx-background-radius: 10;">
+        <Label text="🚌" style="-fx-font-size: 36px;"/>
+        <VBox spacing="3">
+            <Label text="Plan Your Trip"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Find and book buses across Davao del Sur"
+                   style="-fx-font-size: 12px; -fx-text-fill: #7f8c8d;"/>
+        </VBox>
+    </HBox>
+
+    <GridPane hgap="12" vgap="10" VBox.vgrow="NEVER"
+              style="-fx-background-color: #f8f9fa; -fx-padding: 16; -fx-background-radius: 10;
+                     -fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-border-width: 1;">
+
+        <Label text="From:"      style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="fromCombo" promptText="Any origin" prefWidth="185"
+                  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="To:"        style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="toCombo" promptText="Any destination" prefWidth="185"
+                  GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+        <Label text="Date:"      style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="datePicker" prefWidth="185"
+                    GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Bus Type:"  style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="busTypeFilter" promptText="All Types" prefWidth="185"
+                  GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+        <Button fx:id="searchButton" text="🔍 Search" onAction="#handleSearch"
+                GridPane.rowIndex="0" GridPane.columnIndex="4"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 25; -fx-padding: 8 28; -fx-cursor: hand;"/>
+        <Button fx:id="todayButton" text="📍 Today" onAction="#showTodayBuses"
+                GridPane.rowIndex="1" GridPane.columnIndex="4"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 25; -fx-padding: 8 28; -fx-cursor: hand;"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="resultCountLabel" text="Click Search to find buses"
+               style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="resetButton" text="Reset" onAction="#resetSearch"
+                style="-fx-background-color: transparent; -fx-text-fill: #e74c3c;
+                       -fx-underline: true; -fx-cursor: hand; -fx-padding: 5 10;"/>
+        <Label text="Updated:" style="-fx-font-size: 11px; -fx-text-fill: #95a5a6;"/>
+        <Label fx:id="lastUpdatedLabel" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <ProgressIndicator fx:id="loadingIndicator" visible="false" maxWidth="36" maxHeight="36" managed="false"/>
+
+    <TableView fx:id="resultsTable" VBox.vgrow="ALWAYS"
+               style="-fx-border-color: #e0e0e0; -fx-border-radius: 10; -fx-background-radius: 10;">
+        <columns>
+            <TableColumn text="Bus No"    fx:id="colBusNumber"     prefWidth="85"/>
+            <TableColumn text="Bus Name"  fx:id="colBusName"       prefWidth="170"/>
+            <TableColumn text="Type"      fx:id="colBusType"        prefWidth="70"/>
+            <TableColumn text="From"      fx:id="colOrigin"         prefWidth="120"/>
+            <TableColumn text="To"        fx:id="colDestination"    prefWidth="120"/>
+            <TableColumn text="Departure" fx:id="colDeparture"      prefWidth="135"/>
+            <TableColumn text="Arrival"   fx:id="colArrival"        prefWidth="135"/>
+            <TableColumn text="Duration"  fx:id="colDuration"       prefWidth="75"/>
+            <TableColumn text="Seats"     fx:id="colAvailableSeats" prefWidth="60"/>
+            <TableColumn text="Fare"      fx:id="colFare"           prefWidth="80"/>
+            <TableColumn text=""          fx:id="colAction"         prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>
