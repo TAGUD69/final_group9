@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.ManageUsersController" spacing="15" style="-fx-padding: 20;">
+    
+    <Label text="Manage Users" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <Separator/>
+    
+    <GridPane hgap="15" vgap="10">
+        <Label text="Full Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="fullNameField" prefWidth="250" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        
+        <Label text="Role:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="roleCombo" prefWidth="250" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <Label text="New Password:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+        <PasswordField fx:id="passwordField" promptText="Leave empty to keep current" prefWidth="250" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <HBox spacing="10">
+        <Button text="Update User" onAction="#handleUpdate" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+        <Button text="Reset Password" onAction="#handleResetPassword" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+        <Button text="Delete User" onAction="#handleDelete" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+        <Button text="Clear" onAction="#handleClear" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 8 20 8 20;"/>
+    </HBox>
+    
+    <Separator/>
+    
+    <Label text="User List" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" fx:id="colId" prefWidth="50"/>
+            <TableColumn text="Username" fx:id="colUsername" prefWidth="120"/>
+            <TableColumn text="Full Name" fx:id="colFullName" prefWidth="200"/>
+            <TableColumn text="Role" fx:id="colRole" prefWidth="100"/>
+            <TableColumn text="Created Date" fx:id="colCreatedDate" prefWidth="150"/>
+        </columns>
+    </TableView>
+</VBox>

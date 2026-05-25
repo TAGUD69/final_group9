@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.BookingController" spacing="15" style="-fx-background-color: white;">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <Label text="Complete Your Booking" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    
+    <Separator/>
+    
+    <GridPane hgap="15" vgap="10">
+        <Label text="Bus:" style="-fx-font-weight: bold; -fx-text-fill: #3498db;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="busInfoLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        
+        <Label text="Route:" style="-fx-font-weight: bold;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="routeLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        
+        <Label text="Departure:" style="-fx-font-weight: bold;" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label fx:id="departureLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        
+        <Label text="Fare per seat:" style="-fx-font-weight: bold; -fx-text-fill: #27ae60;" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="fareLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+    
+    <Separator/>
+    
+    <Label text="Passenger Details" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+    
+    <GridPane hgap="15" vgap="10">
+        <Label text="Full Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="passengerNameField" promptText="Enter passenger name" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="250"/>
+        
+        <Label text="Quick Seats:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <HBox fx:id="quickSeatButtonsContainer" GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="10" alignment="CENTER_LEFT"/>
+        
+        <Label text="Or enter:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+        <HBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="10" alignment="CENTER_LEFT">
+            <TextField fx:id="customSeatsField" promptText="Number of seats" prefWidth="120" style="-fx-padding: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+            <Button text="Apply" onAction="#applyCustomSeats" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 5 15 5 15;"/>
+        </HBox>
+        
+        <Label text="Seat Numbers:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="seatNumbersField" promptText="Enter seat numbers" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        
+        <Label text="Baggage (kg):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="baggageField" promptText="0" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="(₱5 per kg)" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+    </GridPane>
+    
+    <Separator/>
+    
+    <HBox alignment="CENTER_RIGHT" spacing="15">
+        <Label fx:id="totalLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+        <Button text="Confirm Booking" onAction="#handleConfirm" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 25; -fx-cursor: hand; -fx-padding: 10 25 10 25;"/>
+        <Button text="Cancel" onAction="#handleCancel" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 25; -fx-cursor: hand; -fx-padding: 10 25 10 25;"/>
+    </HBox>
+</VBox>
