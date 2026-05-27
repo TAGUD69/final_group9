@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 public class SearchController {
 
     @FXML private HBox statsCardsContainer;
-    @FXML private Label todayBookingsLabel;
-    @FXML private Label todayRevenueLabel;
     @FXML private Label activeSchedulesLabel;
     @FXML private Label totalUsersLabel;
 
@@ -105,9 +103,6 @@ public class SearchController {
         
         activeSchedulesLabel.setText(String.valueOf(activeSchedules));
         totalUsersLabel.setText(String.valueOf(totalUsers));
-        
-        todayBookingsLabel.setText("0");
-        todayRevenueLabel.setText("₱0");
     }
 
     private void setupCities() {
@@ -151,8 +146,15 @@ public class SearchController {
                 addBookButtonAnimation(bookButton);
                 bookButton.setOnAction(e -> {
                     Schedule s = getTableView().getItems().get(getIndex());
-                    if (s.getAvailableSeats() > 0) openBookingDialog(s);
-                    else showAlert("No seats available for this schedule.");
+                    if (s.getAvailableSeats() <= 0) {
+                        showAlert("No seats available for this schedule.");
+                        return;
+                    }
+                    if (isScheduleExpired(s)) {
+                        showAlert("Cannot book this schedule. Departure time has already passed.");
+                        return;
+                    }
+                    openBookingDialog(s);
                 });
             }
             @Override protected void updateItem(Void item, boolean empty) {
@@ -160,7 +162,13 @@ public class SearchController {
                 if (empty) { setGraphic(null); return; }
                 Schedule s = getTableView().getItems().get(getIndex());
                 int seats = s.getAvailableSeats();
-                if (seats <= 0) {
+                boolean expired = isScheduleExpired(s);
+                
+                if (expired) {
+                    bookButton.setText("Expired");
+                    bookButton.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 5 15 5 15; -fx-font-weight: bold;");
+                    bookButton.setDisable(true);
+                } else if (seats <= 0) {
                     bookButton.setText("Sold Out");
                     bookButton.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 5 15 5 15; -fx-font-weight: bold;");
                     bookButton.setDisable(true);
@@ -178,6 +186,18 @@ public class SearchController {
         });
     }
     
+    private boolean isScheduleExpired(Schedule schedule) {
+        try {
+            String departure = schedule.getDepartureTime();
+            if (departure == null || departure.isEmpty()) return false;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime departureTime = LocalDateTime.parse(departure, formatter);
+            return LocalDateTime.now().isAfter(departureTime);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
     private void addBookButtonAnimation(Button button) {
         button.setOnMousePressed(e -> {
             ScaleTransition st = new ScaleTransition(Duration.millis(50), button);
@@ -193,7 +213,18 @@ public class SearchController {
         });
     }
 
+    private void deleteExpiredSchedules() {
+        new Thread(() -> {
+            int deleted = db.deleteExpiredSchedules();
+            if (deleted > 0) {
+                System.out.println("Deleted " + deleted + " expired schedules");
+            }
+        }).start();
+    }
+
     private void loadAllSchedules() {
+        deleteExpiredSchedules();
+        
         loadingIndicator.setVisible(true);
         new Thread(() -> {
             List<Schedule> schedules = db.getAllSchedules();
@@ -224,6 +255,7 @@ public class SearchController {
                     return filterByDate(s, date);
                 })
                 .filter(s -> (type == null || type.equals("All Types") || s.getBusType().equals(type)))
+                .filter(s -> !isScheduleExpired(s))
                 .collect(Collectors.toList());
 
             javafx.application.Platform.runLater(() -> {

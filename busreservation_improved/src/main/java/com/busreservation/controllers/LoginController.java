@@ -8,56 +8,32 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.animation.*;
-import javafx.util.Duration;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.input.KeyCode;
+import java.util.prefs.Preferences;
 
 public class LoginController {
     
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
-    @FXML private Button loginButton;
-    @FXML private ProgressIndicator loadingSpinner;
-    @FXML private HBox errorContainer;
-    @FXML private Label errorLabel;
+    @FXML private TextField visiblePasswordField;
+    @FXML private CheckBox rememberMeCheckbox;
+    @FXML private CheckBox showPasswordCheckbox;
     
     private Database db;
+    private Preferences prefs;
     
     public LoginController() {
         db = Database.getInstance();
+        prefs = Preferences.userNodeForPackage(LoginController.class);
     }
     
     @FXML
     public void initialize() {
-        setupEnterKey();
-        setupButtonHoverEffect();
-    }
-    
-    private void setupButtonHoverEffect() {
-        loginButton.setOnMouseEntered(e -> {
-            ScaleTransition scale = new ScaleTransition(Duration.millis(200), loginButton);
-            scale.setToX(1.05);
-            scale.setToY(1.05);
-            scale.play();
-        });
+        loadSavedCredentials();
         
-        loginButton.setOnMouseExited(e -> {
-            ScaleTransition scale = new ScaleTransition(Duration.millis(200), loginButton);
-            scale.setToX(1);
-            scale.setToY(1);
-            scale.play();
-        });
-    }
-    
-    private void setupEnterKey() {
         usernameField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 handleLogin();
@@ -69,106 +45,87 @@ public class LoginController {
                 handleLogin();
             }
         });
+        
+        visiblePasswordField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleLogin();
+            }
+        });
     }
     
-    private void showError(String message) {
-        errorLabel.setText(message);
-        errorContainer.setVisible(true);
-        errorContainer.setManaged(true);
+    private void loadSavedCredentials() {
+        String savedUsername = prefs.get("remember_username", "");
+        String savedPassword = prefs.get("remember_password", "");
         
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), errorContainer);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.play();
-        
-        TranslateTransition shake = new TranslateTransition(Duration.millis(50), errorContainer);
-        shake.setByX(8);
-        shake.setCycleCount(6);
-        shake.setAutoReverse(true);
-        shake.play();
-        
-        usernameField.setStyle("-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #e74c3c; -fx-border-radius: 5; -fx-border-width: 2;");
-        passwordField.setStyle("-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #e74c3c; -fx-border-radius: 5; -fx-border-width: 2;");
-        
-        Timeline resetBorder = new Timeline(
-            new KeyFrame(Duration.seconds(2), e -> {
-                if (!usernameField.isFocused()) {
-                    usernameField.setStyle("-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;");
-                }
-                if (!passwordField.isFocused()) {
-                    passwordField.setStyle("-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;");
-                }
-            })
-        );
-        resetBorder.setCycleCount(1);
-        resetBorder.play();
-        
-        Timeline hideError = new Timeline(
-            new KeyFrame(Duration.seconds(3), e -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), errorContainer);
-                fadeOut.setFromValue(1);
-                fadeOut.setToValue(0);
-                fadeOut.setOnFinished(ev -> {
-                    errorContainer.setVisible(false);
-                    errorContainer.setManaged(false);
-                });
-                fadeOut.play();
-            })
-        );
-        hideError.setCycleCount(1);
-        hideError.play();
+        if (!savedUsername.isEmpty()) {
+            usernameField.setText(savedUsername);
+            rememberMeCheckbox.setSelected(true);
+            
+            if (!savedPassword.isEmpty()) {
+                passwordField.setText(savedPassword);
+                visiblePasswordField.setText(savedPassword);
+            }
+        }
     }
     
-    private void clearError() {
-        errorContainer.setVisible(false);
-        errorContainer.setManaged(false);
-        usernameField.setStyle("-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;");
-        passwordField.setStyle("-fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;");
+    private void saveCredentials(String username, String password) {
+        if (rememberMeCheckbox.isSelected()) {
+            prefs.put("remember_username", username);
+            prefs.put("remember_password", password);
+        } else {
+            prefs.remove("remember_username");
+            prefs.remove("remember_password");
+        }
+    }
+    
+    @FXML
+    private void togglePasswordVisibility() {
+        if (showPasswordCheckbox.isSelected()) {
+            visiblePasswordField.setText(passwordField.getText());
+            visiblePasswordField.setVisible(true);
+            visiblePasswordField.setManaged(true);
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+        } else {
+            passwordField.setText(visiblePasswordField.getText());
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            visiblePasswordField.setVisible(false);
+            visiblePasswordField.setManaged(false);
+        }
     }
     
     @FXML
     private void handleLogin() {
-        clearError();
-        
         String username = usernameField.getText().trim();
-        String password = passwordField.getText();
+        String password = showPasswordCheckbox.isSelected() ? visiblePasswordField.getText() : passwordField.getText();
         
         if (username.isEmpty() || password.isEmpty()) {
-            showError("Please enter username and password");
+            showAlert("Error", "Please enter username and password", Alert.AlertType.ERROR);
             return;
         }
         
-        loginButton.setDisable(true);
-        loginButton.setText("Logging in...");
-        loadingSpinner.setVisible(true);
-        
-        new Thread(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {}
-            
-            User user = db.authenticate(username, password);
-            
-            javafx.application.Platform.runLater(() -> {
-                loadingSpinner.setVisible(false);
-                loginButton.setDisable(false);
-                loginButton.setText("Login");
-                
-                if (user != null) {
-                    SessionManager.setCurrentUser(user);
-                    App.changeScene("dashboard.fxml");
-                } else {
-                    showError("Invalid username or password");
-                }
-            });
-        }).start();
+        User user = db.authenticate(username, password);
+        if (user != null) {
+            saveCredentials(username, password);
+            SessionManager.setCurrentUser(user);
+            App.changeScene("dashboard.fxml");
+        } else {
+            showAlert("Login Failed", "Invalid username or password", Alert.AlertType.ERROR);
+        }
     }
     
     @FXML
     private void handleClear() {
         usernameField.clear();
         passwordField.clear();
-        clearError();
+        visiblePasswordField.clear();
+        rememberMeCheckbox.setSelected(false);
+        showPasswordCheckbox.setSelected(false);
+        passwordField.setVisible(true);
+        passwordField.setManaged(true);
+        visiblePasswordField.setVisible(false);
+        visiblePasswordField.setManaged(false);
     }
     
     @FXML
@@ -184,5 +141,13 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

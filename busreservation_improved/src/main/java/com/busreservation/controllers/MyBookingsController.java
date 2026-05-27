@@ -8,6 +8,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.animation.ScaleTransition;
 import javafx.util.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,7 @@ public class MyBookingsController {
     @FXML private TableColumn<Booking, Void> colAction;
     
     private Database db;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
     @FXML
     public void initialize() {
@@ -73,12 +76,40 @@ public class MyBookingsController {
         });
         
         loadBookings();
+        startAutoRefresh();
+    }
+    
+    private void startAutoRefresh() {
+        Thread refreshThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(60000);
+                    javafx.application.Platform.runLater(() -> loadBookings());
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        refreshThread.setDaemon(true);
+        refreshThread.start();
+    }
+    
+    private boolean isBookingExpired(Booking booking) {
+        try {
+            String departureTime = booking.getDepartureTime();
+            if (departureTime == null || departureTime.isEmpty()) return false;
+            LocalDateTime departure = LocalDateTime.parse(departureTime, formatter);
+            return LocalDateTime.now().isAfter(departure);
+        } catch (Exception e) {
+            return false;
+        }
     }
     
     private void loadBookings() {
         List<Booking> allBookings = db.getUserBookings(SessionManager.getCurrentUser().getUserId());
         List<Booking> activeBookings = allBookings.stream()
             .filter(b -> "confirmed".equals(b.getStatus()))
+            .filter(b -> !isBookingExpired(b))
             .collect(Collectors.toList());
         
         bookingsTable.getItems().clear();

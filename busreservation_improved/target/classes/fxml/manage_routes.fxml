@@ -11,7 +11,7 @@
         <ComboBox fx:id="originCombo" promptText="Origin" editable="true" prefWidth="120"/>
         <ComboBox fx:id="destinationCombo" promptText="Destination" editable="true" prefWidth="120"/>
         <TextField fx:id="distanceField" promptText="Distance (km)" prefWidth="100"/>
-        <TextField fx:id="fareField" promptText="Fare ($)" prefWidth="100"/>
+        <TextField fx:id="fareField" promptText="Fare (₱)" prefWidth="100"/>
         <Button text="Add" onAction="#handleAdd" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
         <Button text="Update" onAction="#handleUpdate" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
         <Button text="Delete" onAction="#handleDelete" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
@@ -24,7 +24,7 @@
             <TableColumn text="Origin" fx:id="colOrigin" prefWidth="150"/>
             <TableColumn text="Destination" fx:id="colDestination" prefWidth="150"/>
             <TableColumn text="Distance (km)" fx:id="colDistance" prefWidth="100"/>
-            <TableColumn text="Base Fare ($)" fx:id="colFare" prefWidth="100"/>
+            <TableColumn text="Base Fare (₱)" fx:id="colFare" prefWidth="100"/>
         </columns>
     </TableView>
 </VBox>

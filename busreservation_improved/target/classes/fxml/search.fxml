@@ -9,14 +9,6 @@
       spacing="15" style="-fx-padding: 20; -fx-background-color: white;">
 
     <HBox fx:id="statsCardsContainer" spacing="15" alignment="CENTER" visible="false" managed="false">
-        <VBox alignment="CENTER" style="-fx-background-color: #3498db; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
-            <Label fx:id="todayBookingsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-            <Label text="Today's Bookings" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
-        </VBox>
-        <VBox alignment="CENTER" style="-fx-background-color: #27ae60; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
-            <Label fx:id="todayRevenueLabel" text="₱0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-            <Label text="Today's Revenue" style="-fx-text-fill: white; -fx-font-size: 12px;"/>
-        </VBox>
         <VBox alignment="CENTER" style="-fx-background-color: #e67e22; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
             <Label fx:id="activeSchedulesLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
             <Label text="Active Schedules" style="-fx-text-fill: white; -fx-font-size: 12px;"/>

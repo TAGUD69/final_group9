@@ -31,7 +31,6 @@ public class Database {
         return instance;
     }
 
-    // ── Password hashing ──────────────────────────────────────────────────────
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -44,7 +43,6 @@ public class Database {
         }
     }
 
-    // ── Table creation ────────────────────────────────────────────────────────
     private void createTables() {
         String[] ddl = {
             "CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, full_name TEXT NOT NULL, role TEXT DEFAULT 'user', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
@@ -60,13 +58,11 @@ public class Database {
         }
     }
 
-    // ── Sample data ───────────────────────────────────────────────────────────
     private void insertSampleData() {
         try {
             ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) FROM users");
             if (rs.getInt(1) > 0) return;
 
-            // Users — passwords hashed
             String[][] users = {
                 {"admin","admin123","System Administrator","admin"},
                 {"john_doe","pass123","John Doe","user"},
@@ -81,7 +77,6 @@ public class Database {
                 }
             }
 
-            // Buses
             Object[][] buses = {
                 {"DDS001","Mount Apo Express",45,"AC"},
                 {"DDS002","Digos City Liner",50,"Seater"},
@@ -98,7 +93,6 @@ public class Database {
                 }
             }
 
-            // Routes
             Object[][] routes = {
                 {"Digos City","Sta. Cruz",25.0,50.0},
                 {"Sta. Cruz","Digos City",25.0,50.0},
@@ -120,7 +114,6 @@ public class Database {
                 }
             }
 
-            // Schedules — use space-separated format for SQLite DATE() compatibility
             String dep1 = LocalDateTime.now().plusDays(1).withHour(6).withMinute(0).withSecond(0).format(DB_FORMAT);
             String arr1 = LocalDateTime.now().plusDays(1).withHour(7).withMinute(30).withSecond(0).format(DB_FORMAT);
             String dep2 = LocalDateTime.now().plusDays(1).withHour(14).withMinute(0).withSecond(0).format(DB_FORMAT);
@@ -136,7 +129,6 @@ public class Database {
         }
     }
 
-    // ── User methods ──────────────────────────────────────────────────────────
     public User authenticate(String username, String password) {
         String sql = "SELECT user_id,username,full_name,role FROM users WHERE username=? AND password=?";
         try (PreparedStatement p = connection.prepareStatement(sql)) {
@@ -198,7 +190,6 @@ public class Database {
         return list;
     }
 
-    // ── Bus methods ───────────────────────────────────────────────────────────
     public List<Bus> getAllBuses() {
         List<Bus> list = new ArrayList<>();
         try (Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM buses")) {
@@ -232,7 +223,6 @@ public class Database {
         } catch (SQLException e) { return false; }
     }
 
-    // ── Route methods ─────────────────────────────────────────────────────────
     public List<Route> getAllRoutes() {
         List<Route> list = new ArrayList<>();
         try (Statement st = connection.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM routes")) {
@@ -266,7 +256,6 @@ public class Database {
         } catch (SQLException e) { return false; }
     }
 
-    // ── Schedule methods ──────────────────────────────────────────────────────
     public List<Schedule> getAllSchedules() {
         List<Schedule> list = new ArrayList<>();
         String sql = "SELECT s.schedule_id, b.bus_number, b.bus_name, b.bus_type, r.origin, r.destination, " +
@@ -329,12 +318,34 @@ public class Database {
     }
 
     public boolean deleteSchedule(int scheduleId) {
-        try (PreparedStatement p = connection.prepareStatement("DELETE FROM schedules WHERE schedule_id=?")) {
-            p.setInt(1, scheduleId); return p.executeUpdate() > 0;
-        } catch (SQLException e) { return false; }
+        try {
+            connection.setAutoCommit(false);
+            
+            try (PreparedStatement pstmt = connection.prepareStatement("DELETE FROM bookings WHERE schedule_id = ?")) {
+                pstmt.setInt(1, scheduleId);
+                pstmt.executeUpdate();
+            }
+            
+            try (PreparedStatement pstmt = connection.prepareStatement("DELETE FROM schedules WHERE schedule_id = ?")) {
+                pstmt.setInt(1, scheduleId);
+                int result = pstmt.executeUpdate();
+                
+                connection.commit();
+                connection.setAutoCommit(true);
+                return result > 0;
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    // ── Booking methods ───────────────────────────────────────────────────────
     public int bookTicket(int userId, int scheduleId, String seatNumbers, String passengerName,
                           int passengerAge, String passengerGender, double baggageKg, double totalFare) {
         try {
@@ -454,7 +465,6 @@ public class Database {
         }
     }
 
-    // ── Report methods ────────────────────────────────────────────────────────
     public List<BookingReport> getBookingSummaryReport() {
         List<BookingReport> list = new ArrayList<>();
         String sql = "SELECT DATE(booking_date) as date, COUNT(*) as bookings, SUM(total_fare) as revenue " +
@@ -479,19 +489,38 @@ public class Database {
         return list;
     }
 
-    // ── Stats for dashboard ───────────────────────────────────────────────────
     public int getTotalBookingsToday() {
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        int count = 0;
         try (Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM bookings WHERE DATE(booking_date)=DATE('now') AND status='confirmed'")) {
-            return rs.getInt(1);
-        } catch (SQLException e) { return 0; }
+             ResultSet rs = st.executeQuery("SELECT booking_date FROM bookings WHERE status = 'confirmed'")) {
+            while (rs.next()) {
+                String bookingDate = rs.getString("booking_date");
+                if (bookingDate != null && bookingDate.startsWith(today)) {
+                    count++;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
     public double getTotalRevenueToday() {
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        double total = 0;
         try (Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery("SELECT COALESCE(SUM(total_fare),0) FROM bookings WHERE DATE(booking_date)=DATE('now') AND status='confirmed'")) {
-            return rs.getDouble(1);
-        } catch (SQLException e) { return 0; }
+             ResultSet rs = st.executeQuery("SELECT booking_date, total_fare FROM bookings WHERE status = 'confirmed'")) {
+            while (rs.next()) {
+                String bookingDate = rs.getString("booking_date");
+                if (bookingDate != null && bookingDate.startsWith(today)) {
+                    total += rs.getDouble("total_fare");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
     }
 
     public int getTotalActiveSchedules() {
@@ -508,7 +537,6 @@ public class Database {
         } catch (SQLException e) { return 0; }
     }
 
-    // ========== ADDED METHOD ==========
     public List<Booking> getAllBookings() {
         List<Booking> list = new ArrayList<>();
         String sql = "SELECT b.booking_id, b.booking_date, b.seat_numbers, b.passenger_name, b.total_fare, b.status, " +
@@ -536,10 +564,54 @@ public class Database {
         }
         return list;
     }
-    // ==================================
 
     public void close() {
         try { if (connection != null && !connection.isClosed()) connection.close(); }
         catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    public int deleteExpiredSchedules() {
+        int deleted = 0;
+        try {
+            String getExpired = "SELECT schedule_id FROM schedules WHERE departure_time < datetime('now', '-1 hour')";
+            List<Integer> expiredIds = new ArrayList<>();
+            try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(getExpired)) {
+                while (rs.next()) {
+                    expiredIds.add(rs.getInt("schedule_id"));
+                }
+            }
+            
+            if (expiredIds.isEmpty()) return 0;
+            
+            connection.setAutoCommit(false);
+            
+            String deleteBookings = "DELETE FROM bookings WHERE schedule_id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(deleteBookings)) {
+                for (int id : expiredIds) {
+                    pstmt.setInt(1, id);
+                    pstmt.executeUpdate();
+                }
+            }
+            
+            String deleteSchedules = "DELETE FROM schedules WHERE schedule_id = ?";
+            try (PreparedStatement pstmt = connection.prepareStatement(deleteSchedules)) {
+                for (int id : expiredIds) {
+                    pstmt.setInt(1, id);
+                    deleted += pstmt.executeUpdate();
+                }
+            }
+            
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+        return deleted;
     }
 }

@@ -46,12 +46,29 @@ public class DashboardController {
         addButtonAnimation(myBookingsButton);
         addButtonAnimation(reportsButton);
         
-        if (isAdmin) loadStats();
-        else {
+        if (isAdmin) {
+            loadStats();
+            startStatsRefresh();
+        } else {
             if (statBookingsLabel != null) statBookingsLabel.getParent().setVisible(false);
         }
 
         showSearch();
+    }
+    
+    private void startStatsRefresh() {
+        Thread refreshThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(30000);
+                    javafx.application.Platform.runLater(() -> loadStats());
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        refreshThread.setDaemon(true);
+        refreshThread.start();
     }
     
     private void addButtonAnimation(Button button) {
