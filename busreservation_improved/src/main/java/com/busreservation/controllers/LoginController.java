@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.animation.TranslateTransition;
+import javafx.util.Duration;
 import java.util.prefs.Preferences;
 
 public class LoginController {
@@ -21,6 +23,7 @@ public class LoginController {
     @FXML private TextField visiblePasswordField;
     @FXML private CheckBox rememberMeCheckbox;
     @FXML private CheckBox showPasswordCheckbox;
+    @FXML private Label errorLabel;
     
     private Database db;
     private Preferences prefs;
@@ -95,13 +98,37 @@ public class LoginController {
         }
     }
     
+    private void showError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
+        
+        TranslateTransition shake = new TranslateTransition(Duration.millis(50), errorLabel);
+        shake.setByX(10);
+        shake.setCycleCount(6);
+        shake.setAutoReverse(true);
+        shake.play();
+        
+        usernameField.setStyle("-fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e74c3c; -fx-border-radius: 8; -fx-border-width: 2;");
+        passwordField.setStyle("-fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e74c3c; -fx-border-radius: 8; -fx-border-width: 2;");
+    }
+    
+    private void clearError() {
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+        usernameField.setStyle("-fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;");
+        passwordField.setStyle("-fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;");
+    }
+    
     @FXML
     private void handleLogin() {
+        clearError();
+        
         String username = usernameField.getText().trim();
         String password = showPasswordCheckbox.isSelected() ? visiblePasswordField.getText() : passwordField.getText();
         
         if (username.isEmpty() || password.isEmpty()) {
-            showAlert("Error", "Please enter username and password", Alert.AlertType.ERROR);
+            showError("Please enter username and password");
             return;
         }
         
@@ -111,21 +138,8 @@ public class LoginController {
             SessionManager.setCurrentUser(user);
             App.changeScene("dashboard.fxml");
         } else {
-            showAlert("Login Failed", "Invalid username or password", Alert.AlertType.ERROR);
+            showError("Invalid username or password");
         }
-    }
-    
-    @FXML
-    private void handleClear() {
-        usernameField.clear();
-        passwordField.clear();
-        visiblePasswordField.clear();
-        rememberMeCheckbox.setSelected(false);
-        showPasswordCheckbox.setSelected(false);
-        passwordField.setVisible(true);
-        passwordField.setManaged(true);
-        visiblePasswordField.setVisible(false);
-        visiblePasswordField.setManaged(false);
     }
     
     @FXML
@@ -141,13 +155,5 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

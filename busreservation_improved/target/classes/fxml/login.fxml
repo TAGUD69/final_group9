@@ -6,16 +6,18 @@
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.busreservation.controllers.LoginController" style="-fx-background-color: linear-gradient(to bottom right, #1a2980, #26d0ce);" alignment="CENTER">
     
-    <VBox alignment="CENTER" spacing="25" maxWidth="380" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 25, 0.5, 0, 10); -fx-padding: 40 35 40 35;">
+    <VBox alignment="CENTER" spacing="20" maxWidth="380" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 25, 0.5, 0, 10); -fx-padding: 40 35 40 35;">
         
         <Label text="🚌 Bus Reservation System" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1a2980;"/>
         
-        <Label text="Welcome Back!" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-padding: 0 0 10 0;"/>
+        <Label text="Welcome Back!" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-padding: 0 0 5 0;"/>
         
         <TextField fx:id="usernameField" promptText="Username" maxWidth="Infinity" style="-fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-font-size: 14px;"/>
         
         <PasswordField fx:id="passwordField" promptText="Password" maxWidth="Infinity" style="-fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-font-size: 14px;"/>
         <TextField fx:id="visiblePasswordField" promptText="Password" maxWidth="Infinity" visible="false" managed="false" style="-fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-font-size: 14px;"/>
+        
+        <Label fx:id="errorLabel" text="" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 0 0 0; -fx-wrap-text: true;" visible="false" managed="false" maxWidth="Infinity" alignment="CENTER"/>
         
         <HBox spacing="20" alignment="CENTER_LEFT">
             <CheckBox fx:id="rememberMeCheckbox" text="Remember Me" style="-fx-text-fill: #555; -fx-font-size: 12px;"/>
@@ -23,8 +25,6 @@
         </HBox>
         
         <Button text="Log in" onAction="#handleLogin" maxWidth="Infinity" style="-fx-background-color: linear-gradient(to right, #1a2980, #26d0ce); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 25; -fx-cursor: hand;"/>
-        
-        <Button text="Clear" onAction="#handleClear" maxWidth="Infinity" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 25; -fx-cursor: hand;"/>
         
         <HBox spacing="5" alignment="CENTER">
             <Label text="Don't have an account?" style="-fx-font-size: 12px; -fx-text-fill: #555;"/>
